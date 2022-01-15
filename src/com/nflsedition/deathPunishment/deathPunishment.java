@@ -71,19 +71,20 @@ public class deathPunishment extends JavaPlugin implements Listener{
 		
 		File logfile = new File(getDataFolder(),"log.bin");
 		if (logfile.exists()) {
-			loghash = dpFile.loadMap(getDataFolder().getPath()+"\\log.bin");
+			loghash = dpFile.loadMap(logfile.getAbsolutePath())
 		}else {
-			dpFile.saveMap(loghash, getDataFolder().getPath()+"\\log.bin");
+			dpFile.saveMap(loghash, logfile.getAbsolutePath());
 		}
-		this.getLogger().info("数据文件"+getDataFolder().getPath()+"\\log.bin"+"已挂载");
+		this.getLogger().info("数据文件 "+logfile.getAbsolutePath()+" 已挂载");
 		
 		//语言文件
 		
-		File langfile = new File(getDataFolder(),"lang");
-		if (!(langfile.exists())) {
-			langfile.mkdir();
+		File langDirectory = new File(getDataFolder(),"lang");
+		if (!(langDirectory.exists())) {
+			langDirectory.mkdir();
+
 			InputStream inputStream = getResource("zh_cn.lang");
-			Path path = Paths.get(getDataFolder().toString(),"\\lang\\zh_cn.lang");
+			Path path = Paths.get(new File(langDirectory,"zh_cn.lang").getAbsolutePath());
 			try {
 				Files.copy(inputStream,path);
 				inputStream.close();
@@ -91,8 +92,9 @@ public class deathPunishment extends JavaPlugin implements Listener{
 				getLogger().info("Error occured");;
 				e.printStackTrace();
 			}
+
 			inputStream = getResource("en_gb.lang");
-			path = Paths.get(getDataFolder().toString(),"\\lang\\en_gb.lang");
+			path = Paths.get(new File(langDirectory,"en_gb.lang").getAbsolutePath());
 			try {
 				Files.copy(inputStream,path);
 				inputStream.close();
@@ -100,8 +102,9 @@ public class deathPunishment extends JavaPlugin implements Listener{
 				getLogger().info("Error occured");;
 				e.printStackTrace();
 			}
+
 			inputStream = getResource("zh_tw.lang");
-			path = Paths.get(getDataFolder().toString(),"\\lang\\zh_tw.lang");
+			path = Paths.get(new File(langDirectory,"zh_tw.lang").getAbsolutePath());
 			try {
 				Files.copy(inputStream,path);
 				inputStream.close();
@@ -110,7 +113,7 @@ public class deathPunishment extends JavaPlugin implements Listener{
 				e.printStackTrace();
 			}
 		}
-		langhash = dpFile.loadLangs(getDataFolder().getPath()+"\\lang");
+		langhash = dpFile.loadLangs(langDirectory);
 		
 		//注册命令执行类
 		this.getCommand("deathpunishment").setExecutor(new dpCommandExecutor(this));
@@ -124,13 +127,13 @@ public class deathPunishment extends JavaPlugin implements Listener{
 		}
 		this.getServer().getPluginManager().registerEvents(this, this);
 		
-		getLogger().info("deathPunishment死亡惩罚插件已启用!");
+		getLogger().info("deathPunishment 死亡惩罚插件已启用!");
 	}
 	public void onDisable() {
 		if (!(getDataFolder().exists())){
 			this.getDataFolder().mkdir();
 		}
-		dpFile.saveMap(loghash, getDataFolder().getPath()+"\\log.bin");
+		dpFile.saveMap(loghash, new File(getDataFolder(),"log.bin"));
 		loghash.clear();
 		langhash.clear();
 		HandlerList.unregisterAll();

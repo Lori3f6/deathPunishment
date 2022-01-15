@@ -93,21 +93,19 @@ public class dpFile {
 			return def;
 		}
 	}
-	public static HashMap<String, JSONObject> loadLangs(String path){
+	public static HashMap<String, JSONObject> loadLangs(File file){
 		HashMap<String, JSONObject> langHash = new HashMap<>();
-		File dir = new File(path);
-		File[] files = dir.listFiles();
+		File[] files = file.listFiles();
 		JSONObject jsonObject = new JSONObject();
-		for (File file : files) {
-			if (!(file.isDirectory())) {
-				String jsonString = readFileToString(file);
+		for (File x : files) {
+			if (!(x.isDirectory())) {
+				String jsonString = readFileToString(x);
 				jsonObject = (JSONObject) JSONValue.parse(jsonString);
-				langHash.put(file.getName(),jsonObject);
-				System.out.println("语言"+file.getName()+"已加载！");
+				langHash.put(x.getName(),jsonObject);
+				System.out.println("语言 "+x.getName()+" 已加载！");
 				//System.out.println(jsonObject.toJSONString());
 			}
 		}
-		
 		return langHash;
 	}
     public static String readFileToString(File file) {
